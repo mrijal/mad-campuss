@@ -37,7 +37,7 @@
 
             <!-- <div style="text-align: center; margin-top: 20px; font-size: 13px;">
                     <span style="color: var(--muted);">Don't have an account?</span> 
-                    <a href="{{ route('register') }}" style="color: var(--accent); text-decoration: none; font-weight: 600;">Register here</a>
+                    <a href="" style="color: var(--accent); text-decoration: none; font-weight: 600;">Register here</a>
                 </div> -->
         </div>
     </div>

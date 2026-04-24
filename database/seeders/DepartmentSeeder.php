@@ -13,7 +13,7 @@ class DepartmentSeeder extends Seeder
     public function run(): void
     {
         $departments = [
-            ['name' => 'Tenik Informatika', 'accreditation' => 'A'],
+            ['name' => 'Teknik Informatika', 'accreditation' => 'A'],
             ['name' => 'Bisnis Digital', 'accreditation' => 'A'],
             ['name' => 'Desain Komunikasi Visual', 'accreditation' => 'A'],
         ];
