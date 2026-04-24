@@ -13,16 +13,21 @@ class CourseSeeder extends Seeder
      */
     public function run(): void
     {
-        $cs = Department::where('name', 'Computer Science')->first();
-        $is = Department::where('name', 'Information Systems')->first();
+        $tif = Department::where('name', 'Teknik Informatika')->first();
+        $bd = Department::where('name', 'Bisnis Digital')->first();
+        $dkv = Department::where('name', 'Desain Komunikasi Visual')->first();
 
-        if ($cs) {
-            Course::create(['department_id' => $cs->id, 'name' => 'Algorithm & Data Structures', 'sks' => 3]);
-            Course::create(['department_id' => $cs->id, 'name' => 'Operating Systems', 'sks' => 3]);
+        if ($tif) {
+            Course::create(['department_id' => $tif->id, 'name' => 'Web Programming', 'sks' => 3]);
+            Course::create(['department_id' => $tif->id, 'name' => 'Mobile Programming', 'sks' => 3]);
         }
 
-        if ($is) {
-            Course::create(['department_id' => $is->id, 'name' => 'Database Management', 'sks' => 4]);
+        if ($bd) {
+            Course::create(['department_id' => $bd->id, 'name' => 'Ilmu Data dan Analisa Bisnis', 'sks' => 3]);
+        }
+
+        if ($dkv) {
+            Course::create(['department_id' => $dkv->id, 'name' => 'Desain Website', 'sks' => 3]);
         }
     }
 }

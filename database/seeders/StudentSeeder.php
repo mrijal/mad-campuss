@@ -13,15 +13,16 @@ class StudentSeeder extends Seeder
      */
     public function run(): void
     {
-        $cs = Department::where('name', 'Computer Science')->first();
-        $is = Department::where('name', 'Information Systems')->first();
+        $cs = Department::where('name', 'Teknik Informatika')->first();
+        $is = Department::where('name', 'Bisnis Digital')->first();
+        $dkv = Department::where('name', 'Desain Komunikasi Visual')->first();
 
         if ($cs) {
             for ($i = 1; $i <= 10; $i++) {
                 Student::create([
                     'department_id' => $cs->id,
-                    'nim' => 'CS100' . str_pad($i, 2, '0', STR_PAD_LEFT),
-                    'name' => 'CS Student ' . $i
+                    'nim' => '23552011138',
+                    'name' => 'Muhammad Rijal'
                 ]);
             }
         }
@@ -30,8 +31,18 @@ class StudentSeeder extends Seeder
             for ($i = 1; $i <= 5; $i++) {
                 Student::create([
                     'department_id' => $is->id,
-                    'nim' => 'IS100' . str_pad($i, 2, '0', STR_PAD_LEFT),
-                    'name' => 'IS Student ' . $i
+                    'nim' => '24552011138',
+                    'name' => 'Bunga Lestari'
+                ]);
+            }
+        }
+
+        if ($dkv) {
+            for ($i = 1; $i <= 10; $i++) {
+                Student::create([
+                    'department_id' => $dkv->id,
+                    'nim' => '25550122129',
+                    'name' => 'Budi Oetomo'
                 ]);
             }
         }

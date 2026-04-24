@@ -13,9 +13,9 @@ class DepartmentSeeder extends Seeder
     public function run(): void
     {
         $departments = [
-            ['name' => 'Computer Science', 'accreditation' => 'A'],
-            ['name' => 'Information Systems', 'accreditation' => 'B'],
-            ['name' => 'Software Engineering', 'accreditation' => 'A'],
+            ['name' => 'Tenik Informatika', 'accreditation' => 'A'],
+            ['name' => 'Bisnis Digital', 'accreditation' => 'A'],
+            ['name' => 'Desain Komunikasi Visual', 'accreditation' => 'A'],
         ];
 
         foreach ($departments as $dept) {
