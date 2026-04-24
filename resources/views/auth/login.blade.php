@@ -8,7 +8,7 @@
             <div class="brand-icon" style="margin: 0 auto 16px;">
                 <i class="bi bi-mortarboard-fill"></i>
             </div>
-            <h3 style="font-family: 'Syne', sans-serif; font-weight: 700; color: #fff;">EduCore Login</h3>
+            <h3 style="font-family: 'Syne', sans-serif; font-weight: 700; color: #fff;">MadUniv Login</h3>
             <p style="color: var(--muted); font-size: 13px;">Sign in to your account</p>
         </div>
 

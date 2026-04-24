@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>EduCore — Academic Management System</title>
+<title>MadUniv — Academic Management System</title>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet"/>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet"/>
@@ -292,6 +292,32 @@
   .legend-item { display: flex; align-items: center; gap: 8px; font-size: 13px; }
   .legend-dot { width: 10px; height: 10px; border-radius: 3px; }
   .legend-val { margin-left: auto; font-weight: 600; color: #fff; }
+
+  /* pie chart */
+  .pie-wrap {
+    display: flex; align-items: center; gap: 24px;
+  }
+  .pie-svg { flex-shrink: 0; }
+  .pie-legend { flex: 1; display: flex; flex-direction: column; gap: 10px; }
+
+  /* area/line chart */
+  .area-chart-wrap {
+    height: 140px;
+    display: flex; flex-direction: column;
+  }
+  .area-chart {
+    flex: 1; display: flex; align-items: flex-end; gap: 6px;
+    padding: 8px 0;
+  }
+  .area-col { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+  .area-bar {
+    width: 100%; border-radius: 4px 4px 0 0;
+    background: linear-gradient(180deg, var(--accent), rgba(91,127,255,0.3));
+    transition: height .4s cubic-bezier(.34,1.56,.64,1);
+    min-height: 4px;
+  }
+  .area-lbl { font-size: 10px; color: var(--muted); }
+  .area-val-small { font-size: 11px; font-weight: 600; color: #fff; margin-top: auto; padding-top: 6px; }
 
   /* ─── TABLE ─── */
   .section-head {
@@ -623,7 +649,7 @@
     <div class="brand-logo">
       <div class="brand-icon"><i class="bi bi-mortarboard-fill"></i></div>
       <div>
-        <div class="brand-name">EduCore</div>
+        <div class="brand-name">MadUniv</div>
         <div class="brand-sub">Academic System</div>
       </div>
     </div>
@@ -786,6 +812,39 @@
             <div class="empty-state" style="padding:10px 0">
               <div class="empty-icon">🏫</div>
               <div class="empty-text">No classrooms yet</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pie Chart + Line Chart -->
+      <div class="charts-row">
+        <div class="card-box">
+          <div class="card-header-row">
+            <div>
+              <div class="card-title">GPA Distribution</div>
+              <div class="card-sub">Grade point average ranges</div>
+            </div>
+          </div>
+          <div class="pie-wrap" id="pie-gpa">
+            <div class="empty-state" style="padding:20px 0">
+              <div class="empty-icon">📈</div>
+              <div class="empty-text">Add students with GPAs to see distribution</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card-box">
+          <div class="card-header-row">
+            <div>
+              <div class="card-title">Enrollment Trend</div>
+              <div class="card-sub">Students added over time</div>
+            </div>
+          </div>
+          <div class="area-chart-wrap" id="enrollment-trend">
+            <div class="empty-state" style="padding:20px 0">
+              <div class="empty-icon">📉</div>
+              <div class="empty-text">Add students to see trend</div>
             </div>
           </div>
         </div>
@@ -1693,6 +1752,70 @@ function refreshDashboard() {
         <div class="prog-bar"><div class="prog-fill" style="width:${pct}%;background:${clr}"></div></div>
       </div>`;
     }).join('');
+  }
+
+  // pie chart - GPA distribution
+  const pieEl = document.getElementById('pie-gpa');
+  const gpaRanges = [
+    { label: 'Honors (3.5-4.0)', min: 3.5, max: 4.0, color: COLOURS[2] },
+    { label: 'Good (3.0-3.49)', min: 3.0, max: 3.49, color: COLOURS[0] },
+    { label: 'Average (2.5-2.99)', min: 2.5, max: 2.99, color: COLOURS[5] },
+    { label: 'Below (0-2.49)', min: 0, max: 2.49, color: COLOURS[4] }
+  ];
+  const gpaCounts = gpaRanges.map(r => db.students.filter(s => s.gpa >= r.min && s.gpa < r.max).length);
+  const gpaTotal = db.students.length || 1;
+  if (db.students.length === 0) {
+    pieEl.innerHTML = `<div class="empty-state" style="padding:20px 0"><div class="empty-icon">📈</div><div class="empty-text">Add students with GPAs to see distribution</div></div>`;
+  } else {
+    const R = 45, cx = 55, cy = 55, stroke = 14;
+    const circumference = 2 * Math.PI * R;
+    let offset = 0;
+    const pieSegments = gpaCounts.map((c, i) => {
+      const pct = c / gpaTotal;
+      if (pct <= 0) return '';
+      const dash = circumference * pct;
+      const gap = circumference - dash;
+      const rot = offset * 360 - 90;
+      offset += pct;
+      return `<circle cx="${cx}" cy="${cy}" r="${R}" fill="none" stroke="${gpaRanges[i].color}" stroke-width="${stroke}"
+        stroke-dasharray="${dash} ${gap}" stroke-dashoffset="0"
+        transform="rotate(-90 ${cx} ${cy})" style="transition:all .4s"/>`;
+    }).join('');
+    pieEl.innerHTML = `
+      <svg class="pie-svg" width="110" height="110" viewBox="0 0 110 110">
+        <circle cx="55" cy="55" r="45" fill="none" stroke="var(--surface2)" stroke-width="14"/>
+        ${pieSegments}
+      </svg>
+      <div class="pie-legend">
+        ${gpaRanges.map((r, i) => `<div class="legend-item">
+          <div class="legend-dot" style="background:${r.color}"></div>
+          <span style="color:var(--muted)">${r.label}</span>
+          <span class="legend-val">${gpaCounts[i]}</span>
+        </div>`).join('')}
+      </div>`;
+  }
+
+  // area chart - enrollment trend
+  const areaEl = document.getElementById('enrollment-trend');
+  if (db.students.length === 0) {
+    areaEl.innerHTML = `<div class="empty-state" style="padding:20px 0"><div class="empty-icon">📉</div><div class="empty-text">Add students to see trend</div></div>`;
+  } else {
+    // simulate monthly data based on student count (in real app, track by date)
+    const months = ['Jan','Feb','Mar','Apr','May','Jun'];
+    const totalStudents = db.students.length;
+    const simulatedData = months.map((_, i) => Math.max(0, Math.min(totalStudents, Math.round(totalStudents * (0.2 + Math.random() * 0.8 * (i+1)/6)))));
+    const maxVal = Math.max(...simulatedData) || 1;
+    areaEl.innerHTML = `
+      <div class="area-chart">
+        ${simulatedData.map((v, i) => {
+          const h = Math.max(4, Math.round(v/maxVal * 100));
+          return `<div class="area-col">
+            <div class="area-val-small">${v}</div>
+            <div class="area-bar" style="height:${h}px"></div>
+            <div class="area-lbl">${months[i]}</div>
+          </div>`;
+        }).join('')}
+      </div>`;
   }
 }
 

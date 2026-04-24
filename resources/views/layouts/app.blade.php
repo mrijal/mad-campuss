@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>EduCore — Academic Management System</title>
+<title>MadUniv — Academic Management System</title>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet"/>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet"/>
@@ -18,7 +18,7 @@
     <a href="{{ route('dashboard') }}" class="brand-logo">
       <div class="brand-icon"><i class="bi bi-mortarboard-fill"></i></div>
       <div>
-        <div class="brand-name">EduCore</div>
+        <div class="brand-name">MadUniv</div>
         <div class="brand-sub">Academic System</div>
       </div>
     </a>

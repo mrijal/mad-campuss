@@ -15,9 +15,12 @@ class DashboardController extends Controller
         $departmentsCount = Department::count();
         $coursesCount = Course::count();
 
-        // For donut chart logic or simple dashboard stats
-        $departments = Department::withCount('students')->get();
+        // Data for charts
+        $departments = Department::withCount(['students', 'courses'])->get();
+        $accreditations = Department::select('accreditation', \DB::raw('count(*) as total'))
+                                    ->groupBy('accreditation')
+                                    ->get();
 
-        return view('dashboard', compact('studentsCount', 'departmentsCount', 'coursesCount', 'departments'));
+        return view('dashboard', compact('studentsCount', 'departmentsCount', 'coursesCount', 'departments', 'accreditations'));
     }
 }
