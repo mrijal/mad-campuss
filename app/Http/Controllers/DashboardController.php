@@ -23,4 +23,19 @@ class DashboardController extends Controller
 
         return view('dashboard', compact('studentsCount', 'departmentsCount', 'coursesCount', 'departments', 'accreditations'));
     }
+
+    public function exportPdf()
+    {
+        $studentsCount = Student::count();
+        $departmentsCount = Department::count();
+        $coursesCount = Course::count();
+
+        $departments = Department::withCount(['students', 'courses'])->get();
+
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('pdf.report', compact(
+            'studentsCount', 'departmentsCount', 'coursesCount', 'departments'
+        ));
+
+        return $pdf->download('Dashboard_Report.pdf');
+    }
 }

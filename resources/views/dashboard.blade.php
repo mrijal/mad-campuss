@@ -27,6 +27,17 @@
             <div class="stat-value">{{ $coursesCount }}</div>
             <div class="stat-label">Courses</div>
         </div>
+        <div class="stat-card orange">
+            <div class="stat-top">
+                <div class="stat-icon"><i class="bi bi-cloud-arrow-down-fill"></i></div>
+                <div class="stat-change up" style="color: var(--orange);">Report</div>
+            </div>
+            <div style="margin-top: 12px; margin-bottom: 2px;">
+                <a href="{{ route('dashboard.export-pdf') }}" class="btn-primary-custom" style="width: 100%; justify-content: center; background: linear-gradient(135deg, var(--orange), #ea580c);">
+                    <i class="bi bi-download"></i> Export Data
+                </a>
+            </div>
+        </div>
     </div>
 
     <div class="chart-grid"

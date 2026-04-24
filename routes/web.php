@@ -15,6 +15,7 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/export-pdf', [DashboardController::class, 'exportPdf'])->name('dashboard.export-pdf');
 
     Route::resource('departments', DepartmentController::class)->except(['create', 'edit', 'show']);
     Route::resource('courses', CourseController::class)->except(['create', 'edit', 'show']);
