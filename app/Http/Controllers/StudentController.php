@@ -59,4 +59,57 @@ class StudentController extends Controller
         $student->delete();
         return redirect()->route('students.index')->with('success', 'Student deleted successfully.');
     }
+
+    public function exportCsv() {
+        $fileName = 'student.csv';
+
+        $headers = [
+            'Content-type' => 'text/csv; charset=UTF-8',
+            'Content-Disposition' => 'attachment; filename="' . $fileName . '"' ,
+        ];
+
+        $callback = function () {
+            $file = fopen('php://output', 'w');
+
+            fprintf($file, chr(0xEF) . chr(0xBB) . chr(0xBF));
+
+            fputcsv($file, [
+                "ID",
+                "NIM",
+                "Name",
+                "Department"
+            ], ';');
+
+            $students = Student::with('department')->get();
+
+            foreach ($students as $key => $student) {
+                fputcsv($file, [
+                    $student->id,
+                    $student->nim,
+                    $student->name,
+                    $student->department->name ?? "-"
+                ]);
+            }
+
+            fclose($file);
+        };
+        // dd("Test");
+        
+        return response()->stream($callback, 200, $headers);
+    }
+
+    public function print() {
+        $students = Student::with('department')->get();
+
+        return view('students.print', compact('students'));
+    }
+
+    public function exportExcel()
+    {
+        $students = Student::with('department')->get();
+        return response()
+                ->view('students.excel', compact('students'))
+                ->header('Content-Type', 'application/vnd.ms-excel')
+                ->header('Content-Disposition', 'attachment; filename=student.xls');
+    }
 }

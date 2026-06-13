@@ -48,4 +48,56 @@ class DepartmentController extends Controller
         $department->delete();
         return redirect()->route('departments.index')->with('success', 'Department deleted successfully.');
     }
+
+    public function print()
+    {
+        $departments = Department::withCount('students')->get();
+        return view('departments.print', compact('departments'));
+    }
+
+    public function exportCsv()
+    {
+        $fileName = 'departments.csv';
+
+        $headers = [
+            'Content-type' => 'text/csv; charset=UTF-8',
+            'Content-Disposition' => 'attachment; filename="' . $fileName . '"',
+        ];
+
+        $callback = function () {
+            $file = fopen('php://output', 'w');
+            fprintf($file, chr(0xEF) . chr(0xBB) . chr(0xBF));
+
+            fputcsv($file, [
+                "ID",
+                "Name",
+                "Accreditation",
+                "Students Count"
+            ], ';');
+
+            $departments = Department::withCount('students')->get();
+
+            foreach ($departments as $dept) {
+                fputcsv($file, [
+                    $dept->id,
+                    $dept->name,
+                    $dept->accreditation,
+                    $dept->students_count
+                ]);
+            }
+
+            fclose($file);
+        };
+
+        return response()->stream($callback, 200, $headers);
+    }
+
+    public function exportExcel()
+    {
+        $departments = Department::withCount('students')->get();
+        return response()
+                ->view('departments.excel', compact('departments'))
+                ->header('Content-Type', 'application/vnd.ms-excel')
+                ->header('Content-Disposition', 'attachment; filename=departments.xls');
+    }
 }

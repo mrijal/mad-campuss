@@ -31,6 +31,12 @@
             <a href="{{ route('courses.index') }}" class="btn-ghost">Clear</a>
             @endif
             <button type="submit" class="btn-primary-custom">Search</button>
+
+            <div class="d-flex justify-content-end align-items-center" style="gap:6px">
+                <a href="{{route('course.print')}}" class="btn btn-primary" target="_blank" title="Print"><i class="bi bi-printer"></i></a>
+                <a href="{{route('course.export-csv')}}" class="btn btn-success" target="_blank" title="Export CSV"><i class="bi bi-filetype-csv"></i></a>
+                <a href="{{route('course.export-excel')}}" class="btn btn-success" target="_blank" title="Export Excel"><i class="bi bi-file-earmark-excel"></i></a>
+            </div>
         </form>
     </div>
     <div style="overflow-x:auto">
@@ -54,14 +60,30 @@
                     <td>
                         <div class="action-btns">
                             <div class="btn-act edit" data-bs-toggle="modal" data-bs-target="#editModal{{ $course->id }}" title="Edit"><i class="bi bi-pencil"></i></div>
-                            <form action="{{ route('courses.destroy', $course->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this course?');" style="display:inline;">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn-act del" title="Delete" style="border:none;background:var(--surface2)"><i class="bi bi-trash3"></i></button>
-                            </form>
+                            <div class="btn-act del" data-bs-toggle="modal" data-bs-target="#deleteModal{{ $course->id }}" title="Delete"><i class="bi bi-trash3"></i></div>
                         </div>
                     </td>
                 </tr>
+
+                <!-- Delete Modal -->
+                <div class="modal fade" id="deleteModal{{ $course->id }}" tabindex="-1" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content text-center" style="padding: 30px 20px;">
+                            <div style="font-size: 50px; color: var(--red); margin-bottom: 20px; line-height: 1;">
+                                <i class="bi bi-exclamation-triangle-fill"></i>
+                            </div>
+                            <h4 style="font-family:'Syne', sans-serif; color:#fff; font-weight:700; margin-bottom: 10px;">Delete Course</h4>
+                            <p style="color:var(--muted); font-size:14px; margin-bottom:24px;">Are you sure you want to delete <strong>{{ $course->name }}</strong>? This action cannot be undone.</p>
+                            
+                            <form action="{{ route('courses.destroy', $course->id) }}" method="POST" style="display:flex; gap:10px; justify-content:center;">
+                                @csrf
+                                @method('DELETE')
+                                <button type="button" class="btn-cancel" data-bs-dismiss="modal" style="flex:1">Cancel</button>
+                                <button type="submit" class="btn-danger" style="flex:1"><i class="bi bi-trash3"></i> Delete</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
 
                 <!-- Edit Modal -->
                 <div class="modal fade" id="editModal{{ $course->id }}" tabindex="-1" aria-hidden="true">

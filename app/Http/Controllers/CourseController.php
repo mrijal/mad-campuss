@@ -58,4 +58,56 @@ class CourseController extends Controller
         $course->delete();
         return redirect()->route('courses.index')->with('success', 'Course deleted successfully.');
     }
+
+    public function print()
+    {
+        $courses = Course::with('department')->get();
+        return view('courses.print', compact('courses'));
+    }
+
+    public function exportCsv()
+    {
+        $fileName = 'courses.csv';
+
+        $headers = [
+            'Content-type' => 'text/csv; charset=UTF-8',
+            'Content-Disposition' => 'attachment; filename="' . $fileName . '"',
+        ];
+
+        $callback = function () {
+            $file = fopen('php://output', 'w');
+            fprintf($file, chr(0xEF) . chr(0xBB) . chr(0xBF));
+
+            fputcsv($file, [
+                "ID",
+                "Name",
+                "Department",
+                "SKS"
+            ], ';');
+
+            $courses = Course::with('department')->get();
+
+            foreach ($courses as $course) {
+                fputcsv($file, [
+                    $course->id,
+                    $course->name,
+                    $course->department->name ?? "-",
+                    $course->sks
+                ]);
+            }
+
+            fclose($file);
+        };
+
+        return response()->stream($callback, 200, $headers);
+    }
+
+    public function exportExcel()
+    {
+        $courses = Course::with('department')->get();
+        return response()
+                ->view('courses.excel', compact('courses'))
+                ->header('Content-Type', 'application/vnd.ms-excel')
+                ->header('Content-Disposition', 'attachment; filename=courses.xls');
+    }
 }

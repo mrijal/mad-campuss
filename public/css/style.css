@@ -471,7 +471,7 @@ body {
     color: var(--muted);
 }
 
-.search-field i {
+.search-field i.bi.bi-search {
     position: absolute;
     left: 10px;
     top: 50%;
